@@ -12,7 +12,7 @@
 					alt="Workflow"
 				/>
 			</div>
-			<nav class="mt-5 flex-1 px-2 space-y-1">
+			<nav class="mt-5 flex flex-col px-2 space-y-1 gap-2">
 				{#each ['Products', 'Orders'] as name}
 					<SidebarLink {name} />
 				{/each}
