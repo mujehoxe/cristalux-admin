@@ -1,29 +1,32 @@
 <script>
-	import ShowMoreButton from './ShowMoreButton.svelte';
+	import Image from '$lib/Image.svelte';
+
 	export let product;
+
+	export let showModal;
 </script>
 
-<div class="bg-slate-300 w-80 relative rounded-xl">
+<a
+	href={`/products/${product.id}`}
+	class="bg-slate-300 w-80 h-96 relative rounded-xl hover:transform hover:scale-105 transition-transform"
+>
 	<div
-		class="w-full bg-red-300 aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none"
+		class="w-full aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75"
 	>
-		<img
-			src={`http://localhost:3000/${product.thumbnail}`}
-			alt={product.name}
-			class="w-full h-full object-center object-cover"
-		/>
-		<ShowMoreButton productId={product.id} />
+		<Image image={product.thumbnail} />
 	</div>
-	<div class="mt-4 flex justify-between p-2">
-		<div>
+	<div class="flex flex-row justify-between p-2">
+		<div class="w-full flex flex-col justify-between items-start">
 			<h3 class="text-sm text-gray-700">
 				<span aria-hidden="true" class="absolute inset-0" />
 				{product.name.toUpperCase()}
 			</h3>
 			{#if product.description}
-				<p class="mt-1 text-sm text-gray-500">{product.description}</p>
+				<p class="text-sm text-gray-500 text-ellipsis overflow-hidden w-64">
+					{product.description}
+				</p>
 			{/if}
 		</div>
-		<p class="text-sm font-medium text-gray-900">$35</p>
+		<p class="text-sm font-medium text-gray-900">{product.price} DZD</p>
 	</div>
-</div>
+</a>
