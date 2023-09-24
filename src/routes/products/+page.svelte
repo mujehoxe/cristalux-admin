@@ -9,20 +9,16 @@
 </script>
 
 {#if pageProducts !== undefined}
-	<div class="md:pl-64 flex flex-col flex-1">
-		<main class="flex-col">
-			<section aria-labelledby="related-heading" class="mt-16 sm:mt-24">
-				<h2 id="related-heading" class="text-lg font-medium text-gray-900">
-					Products
-				</h2>
-				<div class="flex flex-wrap justify-evenly justify-items-start gap-4">
-					{#each pageProducts as product}
-						<ProductCard {product} />
-					{/each}
-				</div>
-			</section>
-		</main>
-	</div>
+	<section aria-labelledby="related-heading">
+		<h2 id="related-heading" class="text-lg font-medium text-gray-900">
+			Products
+		</h2>
+		<div class="flex flex-wrap justify-evenly justify-items-start gap-4 mt-4">
+			{#each pageProducts as product}
+				<ProductCard {product} showModal={openModal} />
+			{/each}
+		</div>
+	</section>
 {:else}
 	<p>Loading...</p>
 {/if}

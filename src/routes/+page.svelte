@@ -2,11 +2,7 @@
 	import Dashboard from './Dashboard.svelte';
 </script>
 
-<div class="md:pl-64 flex flex-col flex-1">
-	<main class="flex-1">
-		<Dashboard />
-	</main>
-</div>
+<Dashboard />
 
 <style lang="postcss">
 	:global(html) {
