@@ -15,9 +15,11 @@
 		</h2>
 		<CreateProduct />
 		<div class="flex flex-wrap justify-evenly justify-items-start gap-4 mt-4">
-			{#each pageProducts as product}
-				<ProductCard {product} showModal={openModal} />
-			{/each}
+			{#key pageProducts}
+				{#each pageProducts as product}
+					<ProductCard {product} />
+				{/each}
+			{/key}
 		</div>
 	</section>
 {:else}
