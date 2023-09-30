@@ -36,6 +36,7 @@
 	"dependencies": {
 		"@fortawesome/free-solid-svg-icons": "^6.4.2",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
+		"@tailwindcss/line-clamp": "^0.4.4",
 		"material-icons": "^1.13.11",
 		"svelte-fa": "^3.0.4"
 	}
