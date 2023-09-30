@@ -13,6 +13,7 @@
 		<h2 id="related-heading" class="text-lg font-medium text-gray-900">
 			Products
 		</h2>
+		<CreateProduct />
 		<div class="flex flex-wrap justify-evenly justify-items-start gap-4 mt-4">
 			{#each pageProducts as product}
 				<ProductCard {product} showModal={openModal} />
