@@ -38,6 +38,9 @@
 				{/each}
 			{/key}
 		</div>
+		<div class="p-6">
+			<Pagination {totalRows} {perPage} bind:currentPage {loadPage} />
+		</div>
 	</section>
 {:else}
 	<p>Loading...</p>
