@@ -13,9 +13,7 @@
 
 	export async function loadPage() {
 		const res = await fetch(
-			`http://localhost:3000/api/v1/products?page=${
-				currentPage + 1
-			}&pageSize=10`
+			`http://localhost:3000/api/v1/products?page=${currentPage + 1}&pageSize=9`
 		);
 		[pageProducts, totalRows] = await res.json();
 		return { products };
