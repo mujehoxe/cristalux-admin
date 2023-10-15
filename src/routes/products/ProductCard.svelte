@@ -6,7 +6,7 @@
 
 <a
 	href={`/products/${product.id}`}
-	class="bg-slate-300 w-80 h-96 relative rounded-xl hover:transform hover:scale-105 transition-transform"
+	class="bg-slate-300 w-80 h-96 relative rounded-xl overflow-hidden hover:transform hover:scale-105 transition-transform"
 >
 	<div
 		class="w-full aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75"
