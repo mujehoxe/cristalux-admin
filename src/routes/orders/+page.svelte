@@ -8,9 +8,7 @@
 	let archived = false;
 
 	export async function reloadOrders() {
-		const res = await fetch(
-			`http://localhost:3000/api/v1/orders?archived=${archived}`
-		);
+		const res = await fetch(`api/v1/orders?archived=${archived}`);
 		orders = await res.json();
 	}
 </script>
