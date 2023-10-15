@@ -13,7 +13,7 @@
 
 	export async function loadPage() {
 		const res = await fetch(
-			`cristalux.store/api/v1/products?page=${currentPage + 1}&pageSize=9`
+			`api/v1/products?page=${currentPage + 1}&pageSize=9`
 		);
 		[pageProducts, totalRows] = await res.json();
 		return { products };
