@@ -1,9 +1,9 @@
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch, params }) {
-	let res = await fetch(`api/v1/products/${params.id}`);
+	let res = await fetch(`cristalux.store/api/v1/products/${params.id}`);
 	const product = await res.json();
 
-	res = await fetch(`/api/v1/categories`);
+	res = await fetch(`/cristalux.store/api/v1/categories`);
 	const categories = await res.json();
 
 	return { product, categories };
@@ -22,7 +22,7 @@ export const actions = {
 					else if (value.size !== 0) data.append(key, value);
 				}
 			});
-			const res = await fetch('api/v1/products/' + params.id, {
+			const res = await fetch('cristalux.store/api/v1/products/' + params.id, {
 				method: 'PATCH',
 				body: data
 			});
