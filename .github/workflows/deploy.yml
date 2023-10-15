@@ -32,6 +32,15 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+      - name: Kill Previous Node.js App
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'pkill node || true'
+
       - name: Deploy with rsync
         run: |
-          rsync -avz dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/backend/client
+          rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/build/
+          rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
+
+      - name: Run Node.js Application
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "(PORT=5173 node build/main >> admin.log 2>&1 &) && cat app.log"
