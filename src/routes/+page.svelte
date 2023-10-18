@@ -1,8 +1,11 @@
 <script>
 	import Dashboard from './Dashboard.svelte';
+
+	/** @type {import('./$types').PageServerLoad} */
+	export let data;
 </script>
 
-<Dashboard />
+<Dashboard {data} />
 
 <style lang="postcss">
 	:global(html) {
