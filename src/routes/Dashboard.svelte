@@ -14,10 +14,11 @@
 
 <div class="max-w-7xl mx-auto p-4">
 	<h1 class="text-2xl font-semibold text-gray-900 mb-4">Dashboard</h1>
-	<div class="space-y-4">
+	<div
+		class="space-y-4 md:space-y-0 md:grid md:grid-cols-1 lg:grid-cols-3 lg:gap-4"
+	>
 		<div class="p-6 border border-gray-200 rounded-lg bg-white shadow-sm">
 			<div class="flex items-center mb-4">
-				<i class="fas fa-dollar-sign text-green-500 text-lg mr-2" />
 				<Fa icon={faDollarSign} class="mr-2 text-green-500" />
 				<h2 class="text-xl font-semibold text-gray-900">Sales Data</h2>
 			</div>
