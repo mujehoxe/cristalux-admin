@@ -26,7 +26,10 @@
 	}
 
 	function removeImage(imageToRemove) {
-		product.images = product.images.filter((image) => image !== imageToRemove);
+		if (product)
+			product.images = product.images.filter(
+				(image) => image !== imageToRemove
+			);
 	}
 </script>
 
@@ -52,8 +55,10 @@
 		>
 			<label
 				class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-				for="name">Nom de produit</label
+				for="name"
 			>
+				Nom de produit <span class="text-red-800">*</span>
+			</label>
 			<div class="mt-1 sm:mt-0 sm:col-span-2">
 				<input
 					type="text"
@@ -91,8 +96,9 @@
 				<label
 					for="category"
 					class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-					>Category</label
 				>
+					Category
+				</label>
 				<Combo selectedItem={product.category} items={categories} />
 			</div>
 
@@ -103,7 +109,7 @@
 					for="price"
 					class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
 				>
-					Prix
+					Prix <span class="text-red-800">*</span>
 				</label>
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<input
@@ -111,7 +117,7 @@
 						name="price"
 						class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
 						bind:value={product.price}
-						min="0"
+						min="0.00"
 						step="0.01"
 					/>
 				</div>
@@ -143,8 +149,9 @@
 				<label
 					for="quantity"
 					class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2"
-					>Quantity</label
 				>
+					Quantity <span class="text-red-800">*</span>
+				</label>
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<input
 						type="number"
@@ -203,8 +210,8 @@
 					>Autres Images</label
 				>
 				<div class="flex flex-row gap-2">
-					{#key product.images}
-						{#if product.images}
+					{#if product && product.images}
+						{#key product.images}
 							{#each product.images as image, index}
 								{#if image}
 									<div
@@ -217,8 +224,8 @@
 									<AddImage id={index} />
 								{/if}
 							{/each}
-						{/if}
-					{/key}
+						{/key}
+					{/if}
 				</div>
 			</div>
 		</div>
