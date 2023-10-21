@@ -2,10 +2,10 @@ import { PUBLIC_BASE_URL } from '$env/static/public';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch, params }) {
-	let res = await fetch(`/api/v1/products/${params.id}`);
+	let res = await fetch(`https://cristalux.store/api/v1/products/${params.id}`);
 	const product = await res.json();
 
-	res = await fetch(`/api/v1/categories`);
+	res = await fetch(`https://cristalux.store/api/v1/categories`);
 	const categories = await res.json();
 
 	return { product, categories };
@@ -25,7 +25,8 @@ export const actions = {
 				}
 			});
 			const res = await fetch(
-				'https://cristalux.store/api/v1/products/' + params.id,
+				'https://cristalux.storehttps://cristalux.store/api/v1/products/' +
+					params.id,
 				{
 					method: 'PATCH',
 					body: data
