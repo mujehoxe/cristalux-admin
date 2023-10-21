@@ -1,5 +1,8 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import Image from '$lib/Image.svelte';
+
 	export let product;
 </script>
 
@@ -10,7 +13,7 @@
 	<div
 		class="w-full aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75"
 	>
-		<Image image={'https://cristalux.store/' + product.thumbnail} />
+		<Image image={PUBLIC_BASE_URL + product.thumbnail} />
 	</div>
 	<div class="flex flex-col justify-between p-2">
 		<div class="w-full flex flex-col justify-between items-start mb-2">

@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import CreateProduct from './CreateProduct.svelte';
 	import Pagination from './Pagination.svelte';
 
@@ -13,9 +15,7 @@
 
 	export async function loadPage() {
 		const res = await fetch(
-			`https://cristalux.store/api/v1/products?page=${
-				currentPage + 1
-			}&pageSize=9`
+			`${PUBLIC_BASE_URL}api/v1/products?page=${currentPage + 1}&pageSize=9`
 		);
 		[pageProducts, totalRows] = await res.json();
 		return { products };

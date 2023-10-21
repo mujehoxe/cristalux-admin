@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import Order from './Order.svelte';
 
 	/** @type {import('./$types').PageData} */
@@ -9,7 +11,7 @@
 
 	export async function reloadOrders() {
 		const res = await fetch(
-			`https://cristalux.store/api/v1/orders?archived=${archived}`
+			`${PUBLIC_BASE_URL}api/v1/orders?archived=${archived}`
 		);
 		orders = await res.json();
 	}

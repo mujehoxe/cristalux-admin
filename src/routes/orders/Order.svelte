@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import { faArchive, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
@@ -39,7 +41,7 @@
 	async function handleAccept() {
 		try {
 			const res = await fetch(
-				`https://cristalux.store/api/v1/orders/accept/${order.id}`,
+				`${PUBLIC_BASE_URL}api/v1/orders/accept/${order.id}`,
 				{
 					method: 'PATCH'
 				}
@@ -61,7 +63,7 @@
 
 		try {
 			const res = await fetch(
-				`https://cristalux.store/api/v1/orders/${action}/${order.id}`,
+				`${PUBLIC_BASE_URL}api/v1/orders/${action}/${order.id}`,
 				{
 					method: 'PATCH'
 				}

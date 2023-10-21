@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import ProductForm from '../ProductForm.svelte';
 	import { goto } from '$app/navigation';
 	import { toastStore } from '$lib/toastStore.js';
@@ -14,7 +16,7 @@
 	async function handleDelete() {
 		try {
 			const response = await fetch(
-				`https://cristalux.store/api/v1/products/${product.id}`,
+				`${PUBLIC_BASE_URL}api/v1/products/${product.id}`,
 				{
 					method: 'DELETE'
 				}
