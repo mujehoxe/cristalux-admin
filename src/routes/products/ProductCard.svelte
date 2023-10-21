@@ -13,7 +13,7 @@
 	<div
 		class="w-full aspect-w-1 aspect-h-1 overflow-hidden group-hover:opacity-75"
 	>
-		<Image image={'/' + product.thumbnail} />
+		<Image image={'https://cristalux.store/' + product.thumbnail} />
 	</div>
 	<div class="flex flex-col justify-between p-2">
 		<div class="w-full flex flex-col justify-between items-start mb-2">

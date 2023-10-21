@@ -175,7 +175,7 @@
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<div class="flex gap-2 items-center">
 						<span class="h-52 w-52 rounded-xl overflow-hidden bg-gray-100">
-							<Image image={'/' + product.thumbnail} />
+							<Image image={'https://cristalux.store/' + product.thumbnail} />
 						</span>
 						<input
 							type="file"
@@ -220,7 +220,7 @@
 										class="rounded-md h-[5rem] min-w-[5rem] overflow-hidden"
 										on:dblclick={() => removeImage(image)}
 									>
-										<Image image={'/' + image} />
+										<Image image={'https://cristalux.store/' + image} />
 									</div>
 								{:else}
 									<AddImage id={index} />
