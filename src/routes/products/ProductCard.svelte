@@ -1,5 +1,8 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import Image from '$lib/Image.svelte';
+
 	export let product;
 </script>
 

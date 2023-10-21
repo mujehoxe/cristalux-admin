@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import AddImage from './AddImage.svelte';
 	import { browser } from '$app/environment';
 	import { enhance } from '$app/forms';

@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import Order from './Order.svelte';
 
 	/** @type {import('./$types').PageData} */
@@ -8,9 +10,7 @@
 	let archived = false;
 
 	export async function reloadOrders() {
-		const res = await fetch(
-			`/api/v1/orders?archived=${archived}`
-		);
+		const res = await fetch(`/api/v1/orders?archived=${archived}`);
 		orders = await res.json();
 	}
 </script>

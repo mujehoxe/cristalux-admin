@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import ProductForm from '../ProductForm.svelte';
 	import { goto } from '$app/navigation';
 	import { toastStore } from '$lib/toastStore.js';

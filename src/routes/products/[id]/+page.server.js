@@ -1,3 +1,5 @@
+import { PUBLIC_BASE_URL } from '$env/static/public';
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch, params }) {
 	let res = await fetch(`/api/v1/products/${params.id}`);
@@ -22,10 +24,13 @@ export const actions = {
 					else if (value.size !== 0) data.append(key, value);
 				}
 			});
-			const res = await fetch('/api/v1/products/' + params.id, {
-				method: 'PATCH',
-				body: data
-			});
+			const res = await fetch(
+				'https://cristalux.store/api/v1/products/' + params.id,
+				{
+					method: 'PATCH',
+					body: data
+				}
+			);
 			if (!res.ok) {
 				console.log(await res.json());
 				throw new Error('Request failed');

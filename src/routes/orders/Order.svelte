@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_BASE_URL } from '$env/static/public';
+
 	import { faArchive, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
