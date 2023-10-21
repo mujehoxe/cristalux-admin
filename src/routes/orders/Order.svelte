@@ -1,5 +1,10 @@
 <script>
-	import { faArchive, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
+	import {
+		faArchive,
+		faBan,
+		faCheck,
+		faTrash
+	} from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
 	import { toasts } from 'svelte-toasts';
@@ -42,6 +47,23 @@
 				`https://cristalux.store/api/v1/orders/accept/${order.id}`,
 				{
 					method: 'PATCH'
+				}
+			);
+			const data = await res.json();
+
+			if (data.affected > 0) order.status = 'accepted';
+			else showToast('Deja accepter');
+		} catch {
+			showToast('Requete échoué');
+		}
+	}
+
+	async function handleDelete() {
+		try {
+			const res = await fetch(
+				`https://cristalux.store/api/v1/orders/${order.id}`,
+				{
+					method: 'DELETE'
 				}
 			);
 			const data = await res.json();
@@ -122,6 +144,14 @@
 		class="relative whitespace-nowrap py-4 pl-3 pr-4 text-sm font-medium sm:pr-6"
 	>
 		<div class="flex flex-row items-center gap-2 justify-center">
+			{#if order.status === 'archived'}
+				<button
+					class="rounded-full w-6 h-6 bg-gray-200 flex justify-center items-center"
+					on:click={() => handleDelete()}
+				>
+					<Fa icon={faTrash} class="text-red-800 cursor-pointer" />
+				</button>
+			{/if}
 			{#if order.status === 'accepted' || order.status === 'declined'}
 				<button
 					class="rounded-full w-6 h-6 bg-gray-200 flex justify-center items-center"
