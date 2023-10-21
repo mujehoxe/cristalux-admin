@@ -9,7 +9,7 @@
 
 	export async function reloadOrders() {
 		const res = await fetch(
-			`https://cristalux.store/api/v1/orders?archived=${archived}`
+			`/api/v1/orders?archived=${archived}`
 		);
 		orders = await res.json();
 	}

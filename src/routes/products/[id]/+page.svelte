@@ -13,12 +13,9 @@
 
 	async function handleDelete() {
 		try {
-			const response = await fetch(
-				`https://cristalux.store/api/v1/products/${product.id}`,
-				{
-					method: 'DELETE'
-				}
-			);
+			const response = await fetch(`/api/v1/products/${product.id}`, {
+				method: 'DELETE'
+			});
 
 			if (!response.ok) {
 				showError('Failed to delete product');

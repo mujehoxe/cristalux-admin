@@ -38,12 +38,9 @@
 
 	async function handleAccept() {
 		try {
-			const res = await fetch(
-				`https://cristalux.store/api/v1/orders/accept/${order.id}`,
-				{
-					method: 'PATCH'
-				}
-			);
+			const res = await fetch(`/api/v1/orders/accept/${order.id}`, {
+				method: 'PATCH'
+			});
 			const data = await res.json();
 
 			if (data.affected > 0) order.status = 'accepted';
@@ -60,12 +57,9 @@
 		};
 
 		try {
-			const res = await fetch(
-				`https://cristalux.store/api/v1/orders/${action}/${order.id}`,
-				{
-					method: 'PATCH'
-				}
-			);
+			const res = await fetch(`/api/v1/orders/${action}/${order.id}`, {
+				method: 'PATCH'
+			});
 
 			order.status = actionState[action];
 		} catch (e) {
