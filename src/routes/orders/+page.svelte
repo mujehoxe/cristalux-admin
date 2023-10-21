@@ -1,6 +1,4 @@
 <script>
-	import { PUBLIC_BASE_URL } from '$env/static/public';
-
 	import Order from './Order.svelte';
 
 	/** @type {import('./$types').PageData} */

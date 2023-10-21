@@ -1,6 +1,4 @@
 <script>
-	import { PUBLIC_BASE_URL } from '$env/static/public';
-
 	import CreateProduct from './CreateProduct.svelte';
 	import Pagination from './Pagination.svelte';
 
