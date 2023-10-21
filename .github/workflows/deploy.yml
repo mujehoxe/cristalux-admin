@@ -47,4 +47,4 @@ jobs:
 
       - name: Run Node.js Application
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm admin.log && touch admin.log && (PORT=5173 node admin >> admin.log 2>&1 &) && cat admin.log"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm admin.log && touch admin.log && (PORT=5173 PUBLIC_BASE_URL=variables.PUBLIC_BASE_URL node admin >> admin.log 2>&1 &) && cat admin.log"
