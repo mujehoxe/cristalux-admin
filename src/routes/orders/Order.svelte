@@ -24,8 +24,9 @@
 		});
 	};
 
-	/** @type {import('./$types').PageData} */
 	export let order;
+	export let archived;
+	export let deleteOrder;
 
 	const statusColors = {
 		pending: 'orange',
@@ -51,8 +52,8 @@
 			);
 			const data = await res.json();
 
-			if (data.affected > 0) order.status = 'accepted';
-			else showToast('Deja accepter');
+			if (data.affected > 0) order.status = '';
+			else showToast('Deja effacer');
 		} catch {
 			showToast('Requete échoué');
 		}
@@ -68,8 +69,7 @@
 			);
 			const data = await res.json();
 
-			if (data.affected > 0) order.status = 'accepted';
-			else showToast('Deja accepter');
+			deleteOrder(order.id);
 		} catch {
 			showToast('Requete échoué');
 		}
@@ -96,7 +96,7 @@
 	}
 </script>
 
-<tr class={`${order.status === 'archived' ? 'opacity-30' : ''}`}>
+<tr class={`${order.status === 'archived' && !archived ? 'opacity-30' : ''}`}>
 	<td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
 		<div class="flex items-center">
 			<div class="ml-4">

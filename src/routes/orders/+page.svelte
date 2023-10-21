@@ -7,6 +7,10 @@
 
 	let archived = false;
 
+	function deleteOrder(id) {
+		orders = orders.filter((order) => order.id != id);
+	}
+
 	export async function reloadOrders() {
 		const res = await fetch(
 			`https://cristalux.store/api/v1/orders?archived=${archived}`
@@ -79,7 +83,7 @@
 		<tbody class="divide-y divide-gray-200 bg-white">
 			{#key orders}
 				{#each orders as order}
-					<Order {order} />
+					<Order {order} {archived} {deleteOrder} />
 				{/each}
 			{/key}
 		</tbody>
