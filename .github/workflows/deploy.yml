@@ -34,7 +34,7 @@ jobs:
 
       - name: Kill Node.js App on Port
         run: |
-          PORT_TO_KILL=5173
+          PORT_TO_KILL=4000
           PID=$(ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "lsof -t -i :$PORT_TO_KILL")
           if [ -n "$PID" ]; then
             ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "kill $PID"
