@@ -47,6 +47,6 @@ jobs:
           rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/admin/
           rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
 
-      - name: Run Node.js Application
+      - name: Run Node Application
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm admin.log && touch admin.log && (PORT=5173 node admin >> admin.log 2>&1 &) && cat admin.log"
