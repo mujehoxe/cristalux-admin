@@ -44,4 +44,4 @@ jobs:
 
       - name: Run Node Application
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm admin.log && touch admin.log && (PORT=5173 node admin >> admin.log 2>&1 &) && cat admin.log"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "rm admin.log && touch admin.log && (PORT=4000 node admin >> admin.log 2>&1 &) && cat admin.log"
