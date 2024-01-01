@@ -3,7 +3,7 @@ name: deploy
 on:
   push:
     branches:
-      - dev
+      - main
 
 jobs:
   build:
@@ -36,15 +36,12 @@ jobs:
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -f 'node admin'" || echo "No matching processes found"
 
+
       - name: Deploy with rsync
         run: |
           rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/admin/
           rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
 
-      - name: Create package.json in ~/admin
-        run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo '{\"type\": \"module\"}' > ~/admin/package.json"
-
       - name: Run Node Application
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "touch -c admin.log && (PORT=4000 BODY_SIZE_LIMIT=0 node admin >> admin.log 2>&1 &) && cat admin.log"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "touch -c admin.log && (PORT=4000 node admin >> admin.log 2>&1 &) && cat admin.log"
