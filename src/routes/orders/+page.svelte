@@ -1,6 +1,8 @@
 <script>
 	import Order from './Order.svelte';
 
+	import { PUBLIC_BASE_URL } from '$env/static/public'
+
 	/** @type {import('./$types').PageData} */
 	export let data;
 	let { orders } = data;
@@ -9,7 +11,7 @@
 
 	export async function reloadOrders() {
 		const res = await fetch(
-			`http://localhost:3000/api/v1/orders?archived=${archived}`
+			`${PUBLIC_BASE_URL}/api/v1/orders?archived=${archived}`
 		);
 		orders = await res.json();
 	}

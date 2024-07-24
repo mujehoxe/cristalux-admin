@@ -1,6 +1,8 @@
+import { PUBLIC_BASE_URL } from '$env/static/public'
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ fetch }) {
-	const res = await fetch(`http://localhost:3000/api/v1/categories`);
+	const res = await fetch(`${PUBLIC_BASE_URL}/api/v1/categories`);
 	const categories = await res.json();
 
 	return { categories };
@@ -17,7 +19,7 @@ export const actions = {
 				if (value !== '' && value.size !== 0) data.append(key, value);
 			});
 
-			const res = await fetch('http://localhost:3000/api/v1/products/', {
+			const res = await fetch(`${PUBLIC_BASE_URL}/api/v1/products/`, {
 				method: 'POST',
 				body: data
 			});

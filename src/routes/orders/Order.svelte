@@ -2,6 +2,8 @@
 	import { faArchive, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 	import Fa from 'svelte-fa';
 
+	import { PUBLIC_BASE_URL } from '$env/static/public'
+
 	import { toasts } from 'svelte-toasts';
 
 	const showToast = (message) => {
@@ -39,7 +41,7 @@
 	async function handleAccept() {
 		try {
 			const res = await fetch(
-				`http://localhost:3000/api/v1/orders/accept/${order.id}`,
+				`${PUBLIC_BASE_URL}/api/v1/orders/accept/${order.id}`,
 				{ method: 'PATCH' }
 			);
 			const data = await res.json();
@@ -51,6 +53,8 @@
 		}
 	}
 
+	import { PUBLIC_BASE_URL } from '$env/static/public'
+
 	async function handleAction(action) {
 		const actionState = {
 			archive: 'archived',
@@ -59,7 +63,7 @@
 
 		try {
 			const res = await fetch(
-				`http://localhost:3000/api/v1/orders/${action}/${order.id}`,
+				`${PUBLIC_BASE_URL}/api/v1/orders/${action}/${order.id}`,
 				{ method: 'PATCH' }
 			);
 

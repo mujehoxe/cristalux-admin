@@ -28,6 +28,9 @@
 	function removeImage(imageToRemove) {
 		product.images = product.images.filter((image) => image !== imageToRemove);
 	}
+
+	import { PUBLIC_BASE_URL } from '$env/static/public'
+	
 </script>
 
 <h3 class="text-lg leading-6 font-medium text-gray-900">Produit</h3>
@@ -166,7 +169,7 @@
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<div class="flex gap-2 items-center">
 						<span class="h-52 w-52 rounded-xl overflow-hidden bg-gray-100">
-							<Image image={'http://localhost:3000/' + product.thumbnail} />
+							<Image image={`${PUBLIC_BASE_URL}/${product.thumbnail}` } />
 						</span>
 						<input
 							type="file"
@@ -211,7 +214,7 @@
 										class="rounded-md h-[5rem] min-w-[5rem] overflow-hidden"
 										on:dblclick={() => removeImage(image)}
 									>
-										<Image image={'http://localhost:3000/' + image} />
+										<Image image={`${PUBLIC_BASE_URL}/${image}`} />
 									</div>
 								{:else}
 									<AddImage id={index} />
