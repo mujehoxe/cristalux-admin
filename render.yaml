@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: cristalux-admin
+    runtime: node
+    plan: starter
+    region: oregon
+    branch: main
+    buildCommand: npm ci && npm run build
+    startCommand: node build/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: BACKEND_API_URL
+        value: https://ecommerce-backend.onrender.com
+    healthCheckPath: /
