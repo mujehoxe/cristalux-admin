@@ -15,12 +15,14 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
 
       - name: Build project
-        run: npm run build
+        run: NODE_ENV=production npm run build
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -32,19 +34,20 @@ jobs:
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Kill Node.js App
+      - name: Stop PM2 Process
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pkill -f 'node admin'" || echo "No matching processes found"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "pm2 stop cristalux-admin || true"
 
       - name: Deploy with rsync
         run: |
-          rsync -avz build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/admin/
-          rsync -avz node_modules/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:~/node_modules/
+          rsync -avz --delete build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/cristalux-admin/build/
+          rsync -avz package.json ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/cristalux-admin/
+          rsync -avz ecosystem.config.cjs ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/cristalux-admin/
 
-      - name: Create package.json in ~/admin
+      - name: Install dependencies on server
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo '{\"type\": \"module\"}' > ~/admin/package.json"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/cristalux-admin && npm install --production"
 
-      - name: Run Node Application
+      - name: Start PM2 Process
         run: |
-          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "touch -c admin.log && (PORT=4000 BODY_SIZE_LIMIT=0 node admin >> admin.log 2>&1 &) && cat admin.log"
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/cristalux-admin && pm2 start cristalux-admin --update-env"

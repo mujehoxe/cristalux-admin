@@ -1,0 +1,519 @@
+import React, { useState, useEffect } from 'react';
+
+// --- MOCK DATA ---
+const categories = [
+  { id: 'cat1', name: 'Electrical', icon: 'zap', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Electrical' },
+  { id: 'cat2', name: 'Plumbing', icon: 'tool', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Plumbing' },
+  { id: 'cat3', name: 'Lighting', icon: 'lightbulb', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Lighting' },
+  { id: 'cat4', name: 'Safety', icon: 'shield', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Safety' },
+  { id: 'cat5', name: 'Tools', icon: 'tool', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Tools' },
+  { id: 'cat6', name: 'Construction', icon: 'briefcase', image: 'https://placehold.co/400x400/e5e7eb/181818?text=Construction' },
+];
+
+const allProducts = [
+  { id: 1, name: 'EMT Conduit 1/2"', price: 'SAR 25.50', image: 'https://placehold.co/600x600/f0f0f0/333?text=Conduit+1', categoryId: 'cat1', images: ['https://placehold.co/600x600/f0f0f0/333?text=Conduit+1', 'https://placehold.co/600x600/f0f0f0/333?text=Conduit+2', 'https://placehold.co/600x600/f0f0f0/333?text=Conduit+3'], rating: 4.5, reviews: 120, specs: [['Gauge', '1/2"'], ['Material', 'Steel'], ['Type', 'EMT']] },
+  { id: 2, name: 'Circuit Breaker', price: 'SAR 78.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=Breaker', categoryId: 'cat1', rating: 5, reviews: 98, specs: [['Amperage', '20A'], ['Poles', '1-Pole']] },
+  { id: 3, name: 'LED Panel Light', price: 'SAR 45.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=LED+Panel', categoryId: 'cat3', rating: 4, reviews: 210, specs: [['Wattage', '40W'], ['Color', 'Cool White']] },
+  { id: 4, name: 'Copper Pipe Set', price: 'SAR 132.75', image: 'https://placehold.co/400x400/f0f0f0/333?text=Copper+Pipes', categoryId: 'cat2', rating: 4.5, reviews: 75, specs: [['Diameter', '3/4"'], ['Length', '10ft']] },
+  { id: 5, name: 'PVC Trunking', price: 'SAR 15.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=PVC+Trunking', categoryId: 'cat1', rating: 4, reviews: 150, specs: [['Size', '25x16mm'], ['Length', '2m']] },
+  { id: 6, name: 'Safety Helmet', price: 'SAR 55.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=Safety+Helmet', categoryId: 'cat4', rating: 5, reviews: 300, specs: [['Standard', 'ANSI Z89.1'], ['Color', 'Yellow']] },
+  { id: 7, name: 'Power Drill', price: 'SAR 250.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=Power+Drill', categoryId: 'cat5', rating: 4.5, reviews: 180, specs: [['Voltage', '18V'], ['Chuck Size', '1/2"']] },
+  { id: 8, 'name': 'Cement Bag', price: 'SAR 20.00', image: 'https://placehold.co/400x400/f0f0f0/333?text=Cement', categoryId: 'cat6', rating: 4, reviews: 450, specs: [['Weight', '50kg'], ['Type', 'Portland']] },
+];
+
+// --- ICONS ---
+const Icon = ({ name, className }) => {
+  const icons = {
+    logo: <path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>,
+    search: <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>,
+    user: <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>,
+    'shopping-cart': <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>,
+    'chevron-left': <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />,
+    'chevron-down': <polyline points="6 9 12 15 18 9"></polyline>,
+    'log-out': <><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></>,
+    'chevron-right': <path d="m9 18 6-6-6-6"/>,
+    'plus-circle': <><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></>,
+    'minus-circle': <><circle cx="12" cy="12" r="10" /><path d="M8 12h8" /></>,
+    trash: <><path d="M3 6h18" /><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" /></>,
+    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+    star: <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.955a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.955c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.175 0l-3.368 2.448c-.784.57-1.838-.197-1.539-1.118l1.287-3.955a1 1 0 00-.364-1.118L2.35 9.382c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69L9.049 2.927z"></path>,
+    sparkles: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M4 17v4M2 19h4M19 3v4M17 5h4M18 17v4M16 19h4" />,
+    close: <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />,
+  };
+  const SvgWrapper = ({ children, name, className }) => {
+      if (name === 'logo') return <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" className={className}>{children}</svg>;
+      if (['chevron-left', 'chevron-down', 'log-out', 'chevron-right', 'plus-circle', 'minus-circle', 'trash', 'menu', 'sparkles', 'close'].includes(name)) return <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className={className}>{children}</svg>;
+      if (name === 'star') return <svg fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" className={className}>{children}</svg>;
+      return <svg fill="currentColor" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" className={className}>{children}</svg>;
+  }
+  return <SvgWrapper name={name} className={className}>{icons[name]}</SvgWrapper>;
+};
+
+// --- Reusable Components ---
+const ProductCard = ({ product, onClick, onAddToCart }) => (
+  <div className="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-background hover:shadow-lg hover:shadow-gray-200 transition-shadow duration-300">
+    <div className="aspect-square overflow-hidden cursor-pointer" onClick={onClick}>
+        <div className="h-full w-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105" style={{backgroundImage: `url("${product.image}")`}}></div>
+    </div>
+    <div className="p-4 flex-1 flex flex-col bg-accent">
+        <h3 className="text-base font-semibold text-text-primary flex-1"><a onClick={onClick} className="hover:text-primary cursor-pointer">{product.name}</a></h3>
+        <p className="text-sm text-gray-500 mt-1">{product.price}</p>
+        <button onClick={() => onAddToCart(product)} className="btn-primary mt-3 w-full rounded-md py-2 text-sm font-bold">Add to Cart</button>
+    </div>
+  </div>
+);
+
+const StarRating = ({ rating, reviewCount }) => (
+    <div className="flex items-center">
+        <div className="flex items-center">
+            {[...Array(5)].map((_, i) => <Icon key={i} name="star" className={`h-5 w-5 ${i < Math.floor(rating) ? 'text-primary' : 'text-zinc-300'}`} />)}
+        </div>
+        <p className="ml-2 text-sm text-text-secondary">{rating.toFixed(1)} ({reviewCount} reviews)</p>
+    </div>
+);
+
+const Modal = ({ isOpen, onClose, title, children }) => {
+    if (!isOpen) return null;
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center p-4">
+            <div className="bg-background rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+                <div className="flex justify-between items-center p-4 border-b border-border">
+                    <h2 className="text-xl font-bold text-text-primary">{title}</h2>
+                    <button onClick={onClose} className="text-text-secondary hover:text-text-primary"><Icon name="close" className="h-6 w-6" /></button>
+                </div>
+                <div className="p-6 overflow-y-auto">{children}</div>
+            </div>
+        </div>
+    );
+};
+
+const MarkdownRenderer = ({ text }) => {
+    const renderText = () => {
+        if (!text) return null;
+        return text
+            .split('\n')
+            .map((line, index) => {
+                if (line.startsWith('### ')) return <h3 key={index} className="text-lg font-bold mt-4 mb-2 text-text-primary">{line.substring(4)}</h3>;
+                if (line.startsWith('## ')) return <h2 key={index} className="text-xl font-bold mt-6 mb-3 text-text-primary">{line.substring(3)}</h2>;
+                if (line.startsWith('# ')) return <h1 key={index} className="text-2xl font-bold mt-8 mb-4 text-text-primary">{line.substring(2)}</h1>;
+                if (line.startsWith('* ')) return <li key={index} className="text-text-secondary ml-4 list-disc">{line.substring(2)}</li>;
+                if (line.startsWith('1. ') || line.startsWith('2. ') || line.startsWith('3. ')) return <li key={index} className="text-text-secondary ml-4 list-decimal">{line.substring(3)}</li>;
+                line = line.replace(/\*\*(.*?)\*\*/g, '<strong class="font-bold text-text-primary">$1</strong>');
+                return <p key={index} className="text-text-secondary mb-2" dangerouslySetInnerHTML={{ __html: line }} />;
+            });
+    };
+    return <div className="prose prose-sm max-w-none">{renderText()}</div>;
+};
+
+// --- App Screens ---
+const AppHeader = ({ onUserIconClick, onCartSelect, cartItemCount, navigate, onSearch }) => {
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            onSearch(searchQuery);
+        }
+    }
+
+    return (
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 py-4">
+            <div className="flex items-center gap-8">
+              <a onClick={() => navigate('home')} className="flex items-center gap-3 text-text-primary cursor-pointer">
+                <Icon name="logo" className="h-8 w-8 text-secondary" />
+                <h1 className="text-2xl font-bold tracking-tighter">Sama Diyari</h1>
+              </a>
+              <nav className="hidden lg:flex items-center gap-6">
+                <a onClick={() => navigate('home')} className="text-sm font-medium text-gray-500 hover:text-primary transition-colors cursor-pointer">Home</a>
+                <a onClick={() => navigate('products')} className="text-sm font-bold text-primary cursor-pointer">Products</a>
+                <a href="#" className="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Brands</a>
+                <a href="#" className="text-sm font-medium text-gray-500 hover:text-primary transition-colors">Deals</a>
+              </nav>
+            </div>
+            <div className="flex flex-1 justify-end items-center gap-4">
+              <div className="hidden md:block relative w-full max-w-xs">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><Icon name="search" className="text-gray-400 h-5 w-5"/></div>
+                <input 
+                    className="form-input w-full rounded-md border-gray-300 bg-accent text-text-primary pl-10 pr-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary" 
+                    placeholder="Search products..." 
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearch}
+                />
+              </div>
+              <button aria-label="Shopping Cart" onClick={onCartSelect} className="relative flex items-center justify-center p-2 rounded-full hover:bg-accent transition-colors">
+                <Icon name="shopping-cart" className="text-secondary h-6 w-6"/>
+                {cartItemCount > 0 && <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-xs font-bold text-white">{cartItemCount}</span>}
+              </button>
+              <button onClick={onUserIconClick} className="hidden lg:flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-accent text-gray-500 hover:bg-gray-200 transition-colors"><Icon name="user" className="h-6 w-6"/></button>
+              <button className="lg:hidden p-2 rounded-md hover:bg-accent transition-colors"><Icon name="menu" className="h-6 w-6 text-gray-500" /></button>
+            </div>
+          </div>
+        </div>
+      </header>
+    );
+};
+
+const HomeScreen = ({ onProductSelect, onCategorySelect, onAddToCart }) => (
+  <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold tracking-tight mb-6 text-text-primary">Shop by Category</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+        {categories.map(cat => (
+          <a key={cat.id} onClick={() => onCategorySelect(cat)} className="group block cursor-pointer">
+            <div className="overflow-hidden rounded-lg"><div className="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg transform group-hover:scale-105 transition-transform duration-300" style={{backgroundImage: `url("${cat.image}")`}}></div></div>
+            <p className="mt-3 text-lg font-semibold text-text-primary">{cat.name}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+    <section className="mb-12">
+      <h2 className="text-2xl font-bold tracking-tight mb-6 text-text-primary">Featured Products</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {allProducts.slice(0, 4).map(product => <ProductCard key={product.id} product={product} onClick={() => onProductSelect(product)} onAddToCart={onAddToCart} />)}
+      </div>
+    </section>
+  </main>
+);
+
+const FilterSection = ({ title, children }) => {
+    const [isOpen, setIsOpen] = useState(true);
+    return (
+        <div className="border-b border-gray-200 pb-3">
+            <button onClick={() => setIsOpen(!isOpen)} className="w-full flex items-center justify-between text-left">
+                <span className="font-medium text-text-primary">{title}</span>
+                <Icon name="chevron-down" className={`h-5 w-5 transform transition-transform text-secondary ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {isOpen && <div className="mt-2 space-y-2">{children}</div>}
+        </div>
+    );
+};
+
+const ProductListingScreen = ({ category, onProductSelect, onAddToCart, products }) => {
+    const title = category ? category.name : "All Products";
+    return (
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-col lg:flex-row gap-8">
+                <aside className="lg:w-1/4">
+                    <div className="sticky top-28">
+                        <nav className="text-sm text-text-secondary mb-6">
+                            <ol className="flex items-center space-x-2">
+                                <li><a className="hover:text-primary" href="#">Home</a></li>
+                                <li><span className="mx-2">/</span></li>
+                                <li className="font-medium text-text-primary">Products</li>
+                            </ol>
+                        </nav>
+                        <h2 className="text-3xl font-extrabold text-text-primary tracking-tight">{title}</h2>
+                        <div className="space-y-6 mt-6">
+                            <FilterSection title="Category">
+                                {categories.map(cat => <a key={cat.id} href="#" className="block text-sm text-text-secondary hover:text-primary">{cat.name}</a>)}
+                            </FilterSection>
+                            <FilterSection title="Brand">
+                                <p className="text-sm text-text-secondary">Brand filters here...</p>
+                            </FilterSection>
+                        </div>
+                    </div>
+                </aside>
+                <div className="lg:w-3/4">
+                    <div className="flex items-center justify-between mb-4">
+                        <p className="text-sm text-text-secondary">Showing {products.length} of {allProducts.length} products</p>
+                        <div className="flex items-center gap-2">
+                            <label className="text-sm font-medium" htmlFor="sort">Sort by:</label>
+                            <select className="form-select rounded-md border-gray-300 bg-accent text-sm text-text-primary focus:border-primary focus:ring-primary" id="sort">
+                                <option>Relevance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        {products.map(product => <ProductCard key={product.id} product={product} onClick={() => onProductSelect(product)} onAddToCart={onAddToCart} />)}
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
+};
+
+const ProductDetailScreen = ({ product, onAddToCart }) => {
+    const [activeTab, setActiveTab] = useState('details');
+    const [mainImage, setMainImage] = useState(product.images ? product.images[0] : product.image);
+    return (
+      <main className="container mx-auto flex-1 px-6 py-8">
+        <div className="mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <div className="col-span-3 row-span-2 mb-2"><img alt="Main product image" className="w-full h-auto object-cover rounded-lg shadow-md" src={mainImage}/></div>
+                    <div className="grid grid-cols-5 gap-2">
+                        {(product.images || [product.image]).map((img, i) => <img key={i} alt={`Product image ${i+1}`} onClick={() => setMainImage(img)} className={`w-full h-24 object-cover rounded-lg shadow-md cursor-pointer ${mainImage === img ? 'ring-2 ring-primary' : ''}`} src={img}/>)}
+                    </div>
+                </div>
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-text-primary">{product.name}</h1>
+                    <div className="mt-4"><StarRating rating={product.rating} reviewCount={product.reviews} /></div>
+                    <p className="mt-4 text-3xl font-bold text-secondary">{product.price}</p>
+                    <div className="mt-8">
+                        <div className="flex items-center gap-4">
+                            <button onClick={() => onAddToCart(product)} className="flex-1 rounded-lg btn-primary px-6 py-3 text-base font-semibold shadow-sm" type="submit">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="mt-16">
+                <div className="border-b border-border"><nav aria-label="Tabs" className="-mb-px flex space-x-8"><a onClick={() => setActiveTab('details')} className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer ${activeTab === 'details' ? 'border-primary text-primary' : 'border-transparent text-text-secondary hover:border-gray-300 hover:text-text-primary'}`}>Product Details</a><a onClick={() => setActiveTab('reviews')} className={`whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium cursor-pointer ${activeTab === 'reviews' ? 'border-primary text-primary' : 'border-transparent text-text-secondary hover:border-gray-300 hover:text-text-primary'}`}>Customer Reviews</a></nav></div>
+                <div className="mt-8 prose prose-sm max-w-none text-text-primary">
+                    {activeTab === 'details' && <>
+                        <h3 className="text-xl font-bold text-text-primary">Product Overview</h3>
+                        <p className="text-text-secondary">This {product.name.toLowerCase()} is designed for a variety of applications. High-quality and durable.</p>
+                        <h3 className="text-xl font-bold mt-8 text-text-primary">Specifications</h3>
+                        <div className="mt-4 divide-y divide-border border-t border-border">
+                            {product.specs.map(([key, value]) => <div key={key} className="grid grid-cols-3 gap-4 py-3"><dt className="font-medium text-text-secondary">{key}</dt><dd className="col-span-2 text-text-primary">{value}</dd></div>)}
+                        </div>
+                    </>}
+                    {activeTab === 'reviews' && <p className="text-text-secondary">No reviews yet.</p>}
+                </div>
+            </div>
+        </div>
+      </main>
+    );
+};
+
+const CartScreen = ({ cartItems, updateQuantity, onCheckout }) => {
+    const total = cartItems.reduce((sum, item) => sum + (parseFloat(item.price.replace('SAR ', '')) * item.quantity), 0);
+    const [isModalOpen, setModalOpen] = useState(false);
+    const [generatedPlan, setGeneratedPlan] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleGeneratePlan = async () => {
+        setModalOpen(true);
+        setIsLoading(true);
+        setGeneratedPlan('');
+
+        const itemList = cartItems.map(item => `${item.name} (Quantity: ${item.quantity})`).join(', ');
+        const prompt = `You are an expert project planner for DIY and professional construction work. Based on the following list of electrical and construction supplies, generate a simple, well-structured project plan. The plan should be easy to follow for someone with basic DIY skills. The output must be in Markdown format. The plan should include the following sections: 1. **Project Title**: A clear, concise title for the project. 2. **Project Overview**: A brief 2-3 sentence summary of what the project entails. 3. **Materials in Cart**: Just list the items provided. 4. **Additional Tools & Materials Required**: A bulleted list of other tools (like screwdrivers, drills, wire strippers, level, etc.) and materials (like screws, wall anchors, etc.) that would likely be needed. 5. **Step-by-Step Guide**: A numbered list of clear, actionable steps. 6. **Safety Precautions**: A bulleted list of crucial safety tips (e.g., "Always turn off the power at the circuit breaker before working with wiring."). Here is the list of items in the cart: ${itemList}`;
+        
+        try {
+            const apiKey = ""; // API key will be injected by the environment
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+            });
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+            const result = await response.json();
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            setGeneratedPlan(text || "Sorry, I couldn't generate a plan for these items.");
+        } catch (error) {
+            console.error("Gemini API call failed:", error);
+            setGeneratedPlan(`Sorry, an error occurred while generating the plan. Please try again. Error: ${error.message}`);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <>
+            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h1 className="text-3xl font-bold mb-6 text-text-primary">Shopping Cart</h1>
+                {cartItems.length === 0 ? (
+                    <div className="text-center py-20 bg-accent rounded-lg"><Icon name="shopping-cart" className="h-16 w-16 mx-auto text-text-secondary mb-4" /><p className="text-text-secondary">Your cart is empty.</p></div>
+                ) : (
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        <div className="lg:col-span-2 space-y-4">{cartItems.map(item => (
+                            <div key={item.id} className="flex items-center bg-accent p-4 rounded-lg shadow-md">
+                                <img src={item.image} alt={item.name} className="w-24 h-24 rounded-md object-cover mr-4" />
+                                <div className="flex-grow"><h3 className="font-bold text-text-primary text-lg">{item.name}</h3><p className="text-secondary font-semibold">{item.price}</p></div>
+                                <div className="flex items-center space-x-4">
+                                    <button onClick={() => updateQuantity(item.id, -1)} className="p-1 text-primary rounded-full hover:bg-gray-200"><Icon name={item.quantity === 1 ? 'trash' : 'minus-circle'} className="h-6 w-6" /></button>
+                                    <span className="font-bold text-lg w-8 text-center text-text-primary">{item.quantity}</span>
+                                    <button onClick={() => updateQuantity(item.id, 1)} className="p-1 text-primary rounded-full hover:bg-gray-200"><Icon name="plus-circle" className="h-6 w-6" /></button>
+                                </div>
+                            </div>
+                        ))}</div>
+                        <div className="bg-accent p-6 rounded-lg h-fit">
+                            <h2 className="text-xl font-bold mb-4 text-text-primary">Order Summary</h2>
+                            <div className="flex justify-between items-center text-lg mb-2"><span className="text-text-secondary">Subtotal:</span><span className="font-semibold text-text-primary">SAR {total.toFixed(2)}</span></div>
+                            <div className="flex justify-between items-center text-lg mb-4"><span className="text-text-secondary">VAT (15%):</span><span className="font-semibold text-text-primary">SAR {(total * 0.15).toFixed(2)}</span></div>
+                            <div className="flex justify-between items-center text-2xl font-bold pt-4 border-t border-border"><span className="text-text-primary">Total:</span><span className="text-primary">SAR {(total * 1.15).toFixed(2)}</span></div>
+                            <button onClick={onCheckout} className="mt-6 w-full btn-primary font-bold py-3 rounded-lg text-lg shadow-lg">Proceed to Checkout</button>
+                            <button onClick={handleGeneratePlan} className="mt-3 w-full bg-secondary text-white font-bold py-3 rounded-lg text-lg flex items-center justify-center gap-2 hover:bg-orange-600 transition-colors shadow-lg">
+                                <Icon name="sparkles" className="h-5 w-5" />
+                                ✨ Generate Project Plan
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </main>
+            <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)} title="AI-Generated Project Plan">
+                {isLoading ? (
+                    <div className="flex justify-center items-center h-48">
+                        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
+                    </div>
+                ) : (
+                    <MarkdownRenderer text={generatedPlan} />
+                )}
+            </Modal>
+        </>
+    );
+};
+
+const CheckoutScreen = ({ cartItems }) => {
+    const total = cartItems.reduce((sum, item) => sum + (parseFloat(item.price.replace('SAR ', '')) * item.quantity), 0) * 1.15;
+    return (
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 className="text-3xl font-bold mb-6 text-text-primary">Checkout</h1>
+            <div className="grid lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 bg-accent p-6 rounded-lg">
+                    <h2 className="text-xl font-bold mb-4 text-text-primary">Shipping Information</h2>
+                    <div className="grid grid-cols-1 gap-4">
+                        <input type="text" placeholder="Full Name" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                        <input type="text" placeholder="Address" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                        <div className="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="City" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                            <input type="text" placeholder="Postal Code" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                        </div>
+                    </div>
+                     <h2 className="text-xl font-bold mt-8 mb-4 text-text-primary">Payment Details</h2>
+                     <div className="grid grid-cols-1 gap-4">
+                        <input type="text" placeholder="Card Number" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                        <div className="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="MM / YY" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                            <input type="text" placeholder="CVC" className="form-input w-full rounded-lg border-border bg-background py-2.5 px-4 text-text-primary" />
+                        </div>
+                    </div>
+                </div>
+                <div className="bg-accent p-6 rounded-lg h-fit">
+                    <h2 className="text-xl font-bold mb-4 text-text-primary">Your Order</h2>
+                    <div className="space-y-2">
+                        {cartItems.map(item => <div key={item.id} className="flex justify-between text-text-secondary"><span className="truncate max-w-48">{item.name} x{item.quantity}</span> <span>SAR {(parseFloat(item.price.replace('SAR ', '')) * item.quantity).toFixed(2)}</span></div>)}
+                    </div>
+                    <div className="flex justify-between items-center text-2xl font-bold pt-4 mt-4 border-t border-border"><span className="text-text-primary">Total:</span><span className="text-primary">SAR {total.toFixed(2)}</span></div>
+                    <button onClick={() => alert('Order Placed!')} className="mt-6 w-full btn-primary font-bold py-3 rounded-lg text-lg shadow-lg">Place Order</button>
+                </div>
+            </div>
+        </main>
+    );
+};
+
+const ProfileScreen = ({ onLogout }) => (
+    <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center space-x-4 mb-8">
+            <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center"><Icon name="user" className="w-12 h-12 text-black"/></div>
+            <div><h2 className="text-3xl font-bold text-text-primary">John Doe</h2><p className="text-text-secondary">john.doe@example.com</p></div>
+        </div>
+        <div className="space-y-2">
+            <a href="#" className="flex justify-between items-center bg-accent p-4 rounded-lg hover:bg-gray-200"><span className="font-semibold text-text-primary">My Orders</span><Icon name="chevron-right" className="w-6 h-6 text-text-secondary"/></a>
+            <a href="#" className="flex justify-between items-center bg-accent p-4 rounded-lg hover:bg-gray-200"><span className="font-semibold text-text-primary">Shipping Addresses</span><Icon name="chevron-right" className="w-6 h-6 text-text-secondary"/></a>
+        </div>
+        <button onClick={onLogout} className="mt-8 w-full max-w-xs bg-secondary text-white font-bold py-3 rounded-lg text-lg flex items-center justify-center space-x-3 hover:bg-red-700 transition-colors shadow-lg"><Icon name="log-out" className="h-6 w-6" /><span>Log Out</span></button>
+    </main>
+);
+
+// --- Main App Component ---
+export default function App() {
+  const [navState, setNavState] = useState({ screen: 'home', history: ['home'], data: null });
+  const [cartItems, setCartItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState(allProducts);
+
+  const navigate = (screen, data = null) => setNavState(prevState => ({ screen: screen, history: [...prevState.history, screen], data: data }));
+  const handleBack = () => setNavState(prevState => { const newHistory = [...prevState.history]; newHistory.pop(); return { screen: newHistory[newHistory.length - 1] || 'home', history: newHistory, data: null }; });
+  
+  const handleLogin = () => { setIsLoggedIn(true); navigate('profile'); };
+  const handleLogout = () => { setIsLoggedIn(false); setNavState({ screen: 'home', history: ['home'], data: null }); };
+
+  const handleUserIconClick = () => { if (isLoggedIn) { navigate('profile'); } else { navigate('login'); } };
+
+  const handleProductSelect = (product) => navigate('product', product);
+  const handleCategorySelect = (category) => {
+    setFilteredProducts(allProducts.filter(p => p.categoryId === category.id));
+    navigate('products', category);
+  };
+  const handleAllProductsSelect = () => {
+    setFilteredProducts(allProducts);
+    navigate('products', null);
+  }
+  const handleCartSelect = () => navigate('cart');
+  const handleCheckout = () => navigate('checkout');
+  
+  const handleAddToCart = (productToAdd) => {
+    setCartItems(currentItems => {
+        const existingItem = currentItems.find(item => item.id === productToAdd.id);
+        if (existingItem) { return currentItems.map(item => item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item); }
+        return [...currentItems, { ...productToAdd, quantity: 1 }];
+    });
+  };
+  
+  const updateQuantity = (id, delta) => setCartItems(currentItems => currentItems.map(item => item.id === id ? { ...item, quantity: Math.max(0, item.quantity + delta) } : item).filter(item => item.quantity > 0));
+
+  const handleAiSearch = async (query) => {
+    const prompt = `Based on the user query "${query}", identify the most relevant product categories from the following list: ${categories.map(c => c.name).join(', ')}. Your response must be a JSON object with a single key "categories" which is an array of strings. For example: {"categories": ["Electrical", "Tools"]}.`;
+    try {
+        const apiKey = ""; // API key will be injected by the environment
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { responseMimeType: "application/json" }
+            })
+        });
+        if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+        const result = await response.json();
+        const responseText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+        const parsed = JSON.parse(responseText);
+        const aiCategories = parsed.categories || [];
+        const categoryIds = categories.filter(c => aiCategories.includes(c.name)).map(c => c.id);
+        const searchResultProducts = allProducts.filter(p => categoryIds.includes(p.categoryId));
+        setFilteredProducts(searchResultProducts);
+        navigate('products', { name: `AI Search: "${query}"` });
+    } catch (error) {
+        console.error("Gemini Search failed:", error);
+        // Fallback to simple text search if AI fails
+        const lowerQuery = query.toLowerCase();
+        setFilteredProducts(allProducts.filter(p => p.name.toLowerCase().includes(lowerQuery)));
+        navigate('products', { name: `Search: "${query}"` });
+    }
+  };
+
+  const renderScreen = () => {
+    switch (navState.screen) {
+      case 'login': return <ProfileScreen onLogout={handleLogout} />;
+      case 'home': return <HomeScreen onProductSelect={handleProductSelect} onCartSelect={handleCartSelect} onCategorySelect={handleCategorySelect} onAddToCart={handleAddToCart} />;
+      case 'products': return <ProductListingScreen category={navState.data} onProductSelect={handleProductSelect} onAddToCart={handleAddToCart} products={filteredProducts} />;
+      case 'product': return <ProductDetailScreen product={navState.data} onAddToCart={handleAddToCart} />;
+      case 'cart': return <CartScreen cartItems={cartItems} updateQuantity={updateQuantity} onCheckout={handleCheckout} />;
+      case 'checkout': return <CheckoutScreen cartItems={cartItems} />;
+      case 'profile': return <ProfileScreen onLogout={handleLogout} />;
+      default: return <HomeScreen onProductSelect={handleProductSelect} onCartSelect={handleCartSelect} onCategorySelect={handleCategorySelect} onAddToCart={handleAddToCart} />;
+    }
+  };
+  
+  return (
+    <>
+    <style>{`
+        :root { --primary-color: #d8b12e; --secondary-color: #dd5828; --background-color: #ffffff; --text-primary: #181818; --text-secondary: #6B7280; --accent-color: #F3F4F6; }
+        body { font-family: "Plus Jakarta Sans", sans-serif; background-color: var(--background-color); color: var(--text-primary); }
+        .btn-primary { @apply bg-[var(--primary-color)] text-black hover:bg-yellow-500 transition-colors duration-300; }
+        .btn-secondary { @apply bg-[var(--accent-color)] text-[var(--text-primary)] hover:bg-gray-200 transition-colors duration-300; }
+        .bg-primary { background-color: var(--primary-color); } .bg-secondary { background-color: var(--secondary-color); } .bg-background { background-color: var(--background-color); } .bg-accent { background-color: var(--accent-color); }
+        .text-primary { color: var(--primary-color); } .text-secondary { color: var(--secondary-color); } .text-text-primary { color: var(--text-primary); } .text-text-secondary { color: var(--text-secondary); }
+        .border-border { border-color: #e5e7eb; } .border-primary { border-color: var(--primary-color); }
+        .ring-primary { --tw-ring-color: var(--primary-color); }
+        .focus\\:border-primary:focus { border-color: var(--primary-color); }
+        .focus\\:ring-primary:focus { --tw-ring-color: var(--primary-color); }
+    `}</style>
+    <div className="relative flex size-full min-h-screen flex-col overflow-x-hidden">
+        <div className="layout-container flex h-full grow flex-col">
+            <AppHeader onBack={navState.screen !== 'home' ? handleBack : null} onUserIconClick={handleUserIconClick} onCartSelect={handleCartSelect} navigate={navigate} onSearch={handleAiSearch} cartItemCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)} />
+            {renderScreen()}
+        </div>
+    </div>
+    </>
+  );
+}
+

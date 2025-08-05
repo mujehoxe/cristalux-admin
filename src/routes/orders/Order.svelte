@@ -53,8 +53,8 @@
 		}
 	}
 
-	import { PUBLIC_BASE_URL } from '$env/static/public'
-
+	console.log(PUBLIC_BASE_URL)
+	
 	async function handleAction(action) {
 		const actionState = {
 			archive: 'archived',

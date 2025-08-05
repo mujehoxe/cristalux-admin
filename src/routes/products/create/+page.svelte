@@ -12,7 +12,7 @@
 		percentage: null,
 		quantity: 0,
 		thumbnail: null,
-		images: [null, null, null, null],
+		images: [],
 		category: null
 	};
 </script>

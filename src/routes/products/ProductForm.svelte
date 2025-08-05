@@ -31,6 +31,19 @@
 
 	import { PUBLIC_BASE_URL } from '$env/static/public'
 	
+	// Ensure PUBLIC_BASE_URL is defined and handle null/undefined cases
+	const baseUrl = PUBLIC_BASE_URL || '';
+	
+	// Helper functions for safe image URL construction
+	function getThumbnailUrl(thumbnail) {
+		if (!thumbnail || !baseUrl) return null;
+		return `${baseUrl}/${thumbnail}`;
+	}
+	
+	function getImageUrl(image) {
+		if (!image || !baseUrl) return null;
+		return `${baseUrl}/${image}`;
+	}
 </script>
 
 <h3 class="text-lg leading-6 font-medium text-gray-900">Produit</h3>
@@ -169,7 +182,7 @@
 				<div class="mt-1 sm:mt-0 sm:col-span-2">
 					<div class="flex gap-2 items-center">
 						<span class="h-52 w-52 rounded-xl overflow-hidden bg-gray-100">
-							<Image image={`${PUBLIC_BASE_URL}/${product.thumbnail}` } />
+							<Image image={getThumbnailUrl(product.thumbnail)} />
 						</span>
 						<input
 							type="file"
@@ -214,7 +227,7 @@
 										class="rounded-md h-[5rem] min-w-[5rem] overflow-hidden"
 										on:dblclick={() => removeImage(image)}
 									>
-										<Image image={`${PUBLIC_BASE_URL}/${image}`} />
+										<Image image={getImageUrl(image)} />
 									</div>
 								{:else}
 									<AddImage id={index} />

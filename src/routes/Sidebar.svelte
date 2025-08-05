@@ -1,5 +1,12 @@
 <script>
 	import SidebarLink from './SidebarLink.svelte';
+	import { goto } from '$app/navigation';
+	import { base } from '$app/paths';
+
+	function handleLogout() {
+		document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+		goto(`${base}/login`);
+	}
 </script>
 
 <aside class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
@@ -17,6 +24,14 @@
 					<SidebarLink {name} />
 				{/each}
 			</nav>
+		</div>
+		<div class="flex-shrink-0 flex bg-gray-700 p-4">
+			<button 
+				on:click={handleLogout}
+				class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+			>
+				Logout
+			</button>
 		</div>
 	</div>
 </aside>
